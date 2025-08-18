@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="//firestore.googleapis.com">
+    <link rel="dns-prefetch" href="//www.gstatic.com">
     
     <title>Blog Post | CLOISONNE ENAMEL</title>
     <meta name="description" content="An article from the art blog of Nino Kartsivadze.">
@@ -14,6 +18,51 @@
     <meta property="og:image" content="https://minankari.art/placeholder.jpg" />
     <meta property="og:url" content="" />
     <meta property="og:site_name" content="CLOISONNE ENAMEL | Nino Kartsivadze" />
+    
+    <script>
+        (function earlySeoBootstrap(){
+            try {
+                var API_KEY = "AIzaSyAxOUOxaufE60eVuyOq_P66MJ9ls_7p470";
+                var PROJECT_ID = "nini-shop-7c89d";
+                var params = new URLSearchParams(location.search);
+                var slug = params.get('slug');
+                var lang = (location.pathname.split('/').filter(Boolean).find(function(p){return ['en','ru','ka'].indexOf(p)>-1;})||'en');
+                if (!slug) return;
+                var endpoint = "https://firestore.googleapis.com/v1/projects/"+PROJECT_ID+"/databases/(default)/documents:runQuery?key="+API_KEY;
+                var body = { structuredQuery: { from: [{ collectionId: 'blog_posts' }], where: { fieldFilter: { field: { fieldPath: 'i18n.'+lang+'.slug' }, op: 'EQUAL', value: { stringValue: slug } } }, limit: 1 } };
+                fetch(endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)})
+                  .then(function(r){return r.json();})
+                  .then(function(rows){
+                      var doc = Array.isArray(rows) ? rows.find(function(x){return x && x.document;})?.document : null;
+                      if (!doc || !doc.fields) return;
+                      var fields = doc.fields;
+                      var i18n = fields.i18n && fields.i18n.mapValue && fields.i18n.mapValue.fields || {};
+                      var langData = i18n[lang] && i18n[lang].mapValue && i18n[lang].mapValue.fields || {};
+                      function s(f){ return f && f.stringValue || ''; }
+                      var title = s(langData.seoTitle) || s(langData.title) || 'Blog Post';
+                      var subtitle = s(langData.subtitle);
+                      var content = s(langData.content);
+                      var metaDescription = s(langData.metaDescription) || subtitle || content.replace(/\[.*?\]|<[^>]*>/g, '').substring(0,160);
+                      var media = (fields.mediaUrls && fields.mediaUrls.arrayValue && fields.mediaUrls.arrayValue.values ? fields.mediaUrls.arrayValue.values : []).map(function(v){return v.stringValue;});
+                      var firstImage = media.filter(function(u){ return u && !/(?:youtube\.com|youtu\.be)/i.test(u);})[0];
+                      var pageUrl = location.href;
+                      document.title = title + ' | Nino Kartsivadze';
+                      var md = document.querySelector('meta[name="description"]'); if (md) md.setAttribute('content', metaDescription);
+                      var canonical = document.querySelector('link[rel="canonical"]'); if (canonical) canonical.setAttribute('href', pageUrl);
+                      var ogT = document.querySelector('meta[property="og:title"]'); if (ogT) ogT.setAttribute('content', title);
+                      var ogD = document.querySelector('meta[property="og:description"]'); if (ogD) ogD.setAttribute('content', metaDescription);
+                      var ogU = document.querySelector('meta[property="og:url"]'); if (ogU) ogU.setAttribute('content', pageUrl);
+                      var ogI = document.querySelector('meta[property="og:image"]'); if (ogI && firstImage) ogI.setAttribute('content', firstImage);
+                      var schemaEl = document.getElementById('blog-post-schema');
+                      if (schemaEl) {
+                          var schema = { "@context":"https://schema.org", "@type":"Article", headline: title, description: metaDescription, image: firstImage ? [firstImage] : undefined, datePublished: new Date().toISOString(), mainEntityOfPage: pageUrl };
+                          schemaEl.textContent = JSON.stringify(schema);
+                      }
+                  })
+                  .catch(function(){});
+            } catch(e) {}
+        })();
+    </script>
 
     <!-- ИЗМЕНЕНИЕ: Добавляем пустую заглушку для Schema, которую заполнит JavaScript -->
     <script type="application/ld+json" id="blog-post-schema">{}</script>
@@ -98,7 +147,7 @@
         <p></p> 
     </footer>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://www.youtube.com/iframe_api" async defer></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
