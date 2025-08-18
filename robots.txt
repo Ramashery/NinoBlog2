@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Запрещаем индексацию админ-панели
+Disallow: /admin/
+Disallow: /*admin*
+
+# Разрешаем индексацию всех страниц
+Allow: /*.html
+Allow: /ru/
+Allow: /en/
+Allow: /ka/
+
+# Указываем расположение sitemap
+Sitemap: https://minankari.art/sitemap.xml
+
+# Время задержки между запросами (в секундах)
+Crawl-delay: 1

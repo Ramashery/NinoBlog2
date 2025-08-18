@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error | Cloisonne Enamel by Nino Kartsivadze</title>
+    <meta name="description" content="We're experiencing technical difficulties. Please try again later or return to our homepage.">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <link rel="canonical" href="https://minankari.art/500.html" />
+    
+    <style>
+        :root { 
+            --primary: #D4AF37; 
+            --bg: #121212; 
+            --glass: rgba(255, 255, 255, 0.05); 
+            --text-light: rgba(255, 255, 255, 0.9); 
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Montserrat', sans-serif; 
+        }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--text-light); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            padding: 2rem; 
+        }
+        
+        .error-container { 
+            background: var(--glass); 
+            border-radius: 24px; 
+            padding: 3rem; 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(212, 175, 55, 0.1); 
+            max-width: 600px; 
+        }
+        
+        .error-code { 
+            font-size: 6rem; 
+            color: var(--primary); 
+            font-weight: 300; 
+            margin-bottom: 1rem; 
+        }
+        
+        .error-title { 
+            font-size: 2rem; 
+            color: var(--text-light); 
+            margin-bottom: 1rem; 
+        }
+        
+        .error-message { 
+            font-size: 1.1rem; 
+            opacity: 0.8; 
+            margin-bottom: 2rem; 
+            line-height: 1.6; 
+        }
+        
+        .home-button { 
+            display: inline-block; 
+            background: var(--primary); 
+            color: var(--bg); 
+            text-decoration: none; 
+            padding: 1rem 2rem; 
+            border-radius: 50px; 
+            font-weight: 500; 
+            transition: all 0.3s; 
+        }
+        
+        .home-button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3); 
+        }
+        
+        .logo { 
+            font-size: 1.5rem; 
+            color: var(--primary); 
+            margin-bottom: 2rem; 
+            letter-spacing: 0.2rem; 
+        }
+        
+        .retry-button { 
+            display: inline-block; 
+            background: none; 
+            color: var(--primary); 
+            text-decoration: none; 
+            padding: 0.8rem 1.5rem; 
+            border-radius: 50px; 
+            font-weight: 500; 
+            transition: all 0.3s; 
+            border: 1px solid var(--primary); 
+            margin-left: 1rem; 
+        }
+        
+        .retry-button:hover { 
+            background: var(--primary); 
+            color: var(--bg); 
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">CLOISONNÉ ENAMEL</div>
+    
+    <div class="error-container">
+        <div class="error-code">500</div>
+        <h1 class="error-title">Server Error</h1>
+        <p class="error-message">
+            We're experiencing technical difficulties. 
+            Our team has been notified and is working to resolve the issue. 
+            Please try again later or return to our homepage.
+        </p>
+        <div>
+            <a href="/" class="home-button">Return to Homepage</a>
+            <button onclick="location.reload()" class="retry-button">Try Again</button>
+        </div>
+    </div>
+</body>
+</html>
