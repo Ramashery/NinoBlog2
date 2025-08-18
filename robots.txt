@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Разрешаем индексацию всех страниц
+Allow: /index.html
+Allow: /about.html
+Allow: /blog.html
+Allow: /cast.html
+Allow: /product.html
+Allow: /en/
+Allow: /ru/
+Allow: /ka/
+
+# Запрещаем индексацию служебных файлов
+Disallow: /.git/
+Disallow: /admin-panel
+Disallow: /firebase-config
+
+# Указываем расположение sitemap
+Sitemap: https://minankari.art/sitemap.xml
+
+# Время задержки между запросами (в секундах)
+Crawl-delay: 1
