@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+         xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    
+    <!-- Главная страница -->
+    <url>
+        <loc>https://minankari.art/</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://minankari.art/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://minankari.art/ru/"/>
+        <xhtml:link rel="alternate" hreflang="ka" href="https://minankari.art/ka/"/>
+    </url>
+    
+    <!-- Основные страницы -->
+    <url>
+        <loc>https://minankari.art/about.html</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://minankari.art/about.html"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://minankari.art/ru/about.html"/>
+        <xhtml:link rel="alternate" hreflang="ka" href="https://minankari.art/ka/about.html"/>
+    </url>
+    
+    <url>
+        <loc>https://minankari.art/blog.html</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://minankari.art/blog.html"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://minankari.art/ru/blog.html"/>
+        <xhtml:link rel="alternate" hreflang="ka" href="https://minankari.art/ka/blog.html"/>
+    </url>
+    
+    <url>
+        <loc>https://minankari.art/cast.html</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://minankari.art/cast.html"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://minankari.art/ru/cast.html"/>
+        <xhtml:link rel="alternate" hreflang="ka" href="https://minankari.art/ru/cast.html"/>
+    </url>
+    
+    <url>
+        <loc>https://minankari.art/product.html</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://minankari.art/product.html"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://minankari.art/ru/product.html"/>
+        <xhtml:link rel="alternate" hreflang="ka" href="https://minankari.art/ka/product.html"/>
+    </url>
+    
+    <!-- Русская версия -->
+    <url>
+        <loc>https://minankari.art/ru/</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://minankari.art/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://minankari.art/ru/"/>
+        <xhtml:link rel="alternate" hreflang="ka" href="https://minankari.art/ka/"/>
+    </url>
+    
+    <!-- Грузинская версия -->
+    <url>
+        <loc>https://minankari.art/ka/</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://minankari.art/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://minankari.art/ru/"/>
+        <xhtml:link rel="alternate" hreflang="ka" href="https://minankari.art/ka/"/>
+    </url>
+    
+</urlset>
