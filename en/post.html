@@ -26,12 +26,17 @@
                       var media = (fields.mediaUrls && fields.mediaUrls.arrayValue && fields.mediaUrls.arrayValue.values ? fields.mediaUrls.arrayValue.values : []).map(function(v){return v.stringValue;});
                       var firstImage = media.filter(function(u){ return u && !/(?:youtube\.com|youtu\.be)/i.test(u);})[0];
                       var pageUrl = location.href;
+                      var urlObj = new URL(pageUrl);
+                      var keepParams = new Set(['slug']);
+                      Array.from(urlObj.searchParams.keys()).forEach(function(k){ if(!keepParams.has(k)) urlObj.searchParams.delete(k); });
+                      urlObj.hash = '';
+                      var normalizedUrl = urlObj.toString();
                       document.title = title + ' | Nino Kartsivadze';
                       var md = document.querySelector('meta[name="description"]'); if (md) md.setAttribute('content', metaDescription);
-                      var canonical = document.querySelector('link[rel="canonical"]'); if (canonical) canonical.setAttribute('href', pageUrl);
+                      var canonical = document.querySelector('link[rel="canonical"]'); if (canonical) canonical.setAttribute('href', normalizedUrl);
                       var ogT = document.querySelector('meta[property="og:title"]'); if (ogT) ogT.setAttribute('content', title);
                       var ogD = document.querySelector('meta[property="og:description"]'); if (ogD) ogD.setAttribute('content', metaDescription);
-                      var ogU = document.querySelector('meta[property="og:url"]'); if (ogU) ogU.setAttribute('content', pageUrl);
+                      var ogU = document.querySelector('meta[property="og:url"]'); if (ogU) ogU.setAttribute('content', normalizedUrl);
                       var ogI = document.querySelector('meta[property="og:image"]'); if (ogI && firstImage) ogI.setAttribute('content', firstImage);
 
                       // og:locale

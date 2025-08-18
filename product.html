@@ -47,15 +47,20 @@
                             .map(function(v){ return v.stringValue; })
                             .filter(function(u){ return u && !/(?:youtube\.com|youtu\.be)/i.test(u); });
                         var pageUrl = location.href;
+                        var urlObj = new URL(pageUrl);
+                        var keepParams = new Set(['slug']);
+                        Array.from(urlObj.searchParams.keys()).forEach(function(k){ if(!keepParams.has(k)) urlObj.searchParams.delete(k); });
+                        urlObj.hash = '';
+                        var normalizedUrl = urlObj.toString();
 
                         if (title) { document.title = title + ' | Nino Kartsivadze'; }
                         var md = document.querySelector('meta[name="description"]'); if (md) { md.setAttribute('content', description.substring(0, 160)); }
                         var canonical = document.querySelector('link[rel="canonical"]');
                         if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
-                        canonical.setAttribute('href', pageUrl);
+                        canonical.setAttribute('href', normalizedUrl);
                         var ogTitle = document.querySelector('meta[property="og:title"]'); if (ogTitle) { ogTitle.setAttribute('content', title || ''); }
                         var ogDesc = document.querySelector('meta[property="og:description"]'); if (ogDesc) { ogDesc.setAttribute('content', description.substring(0, 160)); }
-                        var ogUrl = document.querySelector('meta[property="og:url"]'); if (ogUrl) { ogUrl.setAttribute('content', pageUrl); }
+                        var ogUrl = document.querySelector('meta[property="og:url"]'); if (ogUrl) { ogUrl.setAttribute('content', normalizedUrl); }
                         var ogImage = document.querySelector('meta[property="og:image"]'); if (ogImage && images[0]) { ogImage.setAttribute('content', images[0]); }
 
                         var schemaEl = document.getElementById('product-schema-json');
@@ -134,7 +139,12 @@
         function isYoutubeUrl(url) { return /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/.test(url); }
 
         function updateMetaTags(product) {
-            const pageUrl = window.location.href;
+            const rawUrl = window.location.href;
+            const urlObj = new URL(rawUrl);
+            const keepParams = new Set(['slug']);
+            Array.from(urlObj.searchParams.keys()).forEach(k => { if(!keepParams.has(k)) urlObj.searchParams.delete(k); });
+            urlObj.hash = '';
+            const pageUrl = urlObj.toString();
             const seoTitle = product.seoTitle || product.title;
             const metaDescription = product.metaDescription || (product.description ? product.description.substring(0, 160).replace(/\n/g, ' ') : 'Handmade jewelry by Nino Kartsivadze');
             const imageList = product.images ? product.images.filter(url => !isYoutubeUrl(url)) : [];
