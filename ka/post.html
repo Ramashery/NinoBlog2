@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="//firestore.googleapis.com">
+    <link rel="dns-prefetch" href="//www.gstatic.com">
     
     <title>Blog Post | CLOISONNE ENAMEL</title>
     <meta name="description" content="An article from the art blog of Nino Kartsivadze.">
@@ -14,6 +18,87 @@
     <meta property="og:image" content="https://minankari.art/placeholder.jpg" />
     <meta property="og:url" content="" />
     <meta property="og:site_name" content="CLOISONNE ENAMEL | Nino Kartsivadze" />
+    
+    <script>
+        (function earlySeoBootstrap(){
+            try {
+                var API_KEY = "AIzaSyAxOUOxaufE60eVuyOq_P66MJ9ls_7p470";
+                var PROJECT_ID = "nini-shop-7c89d";
+                var params = new URLSearchParams(location.search);
+                var slug = params.get('slug');
+                var lang = (location.pathname.split('/').filter(Boolean).find(function(p){return ['en','ru','ka'].indexOf(p)>-1;})||'ka');
+                document.documentElement.lang = lang;
+                if (params.get('no_early_seo') === '1' || (function(){try{return localStorage.getItem('seoEarly')==='off';}catch(e){return false;}})()) return;
+                if (!slug) return;
+                var endpoint = "https://firestore.googleapis.com/v1/projects/"+PROJECT_ID+"/databases/(default)/documents:runQuery?key="+API_KEY;
+                var body = { structuredQuery: { from: [{ collectionId: 'blog_posts' }], where: { fieldFilter: { field: { fieldPath: 'i18n.'+lang+'.slug' }, op: 'EQUAL', value: { stringValue: slug } } }, limit: 1 } };
+                fetch(endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)})
+                  .then(function(r){return r.json();})
+                  .then(function(rows){
+                      var doc = Array.isArray(rows) ? rows.find(function(x){return x && x.document;})?.document : null;
+                      if (!doc || !doc.fields) return;
+                      var fields = doc.fields;
+                      var i18n = fields.i18n && fields.i18n.mapValue && fields.i18n.mapValue.fields || {};
+                      var langData = i18n[lang] && i18n[lang].mapValue && i18n[lang].mapValue.fields || {};
+                      function s(f){ return f && f.stringValue || ''; }
+                      var title = s(langData.seoTitle) || s(langData.title) || 'Blog Post';
+                      var subtitle = s(langData.subtitle);
+                      var content = s(langData.content);
+                      var metaDescription = s(langData.metaDescription) || subtitle || content.replace(/\[.*?\]|<[^>]*>/g, '').substring(0,160);
+                      var media = (fields.mediaUrls && fields.mediaUrls.arrayValue && fields.mediaUrls.arrayValue.values ? fields.mediaUrls.arrayValue.values : []).map(function(v){return v.stringValue;});
+                      var firstImage = media.filter(function(u){ return u && !/(?:youtube\.com|youtu\.be)/i.test(u);})[0];
+                      var pageUrl = location.href;
+                      var urlObj = new URL(pageUrl);
+                      var keepParams = new Set(['slug']);
+                      Array.from(urlObj.searchParams.keys()).forEach(function(k){ if(!keepParams.has(k)) urlObj.searchParams.delete(k); });
+                      urlObj.hash = '';
+                      var normalizedUrl = urlObj.toString();
+                      document.title = title + ' | Nino Kartsivadze';
+                      var md = document.querySelector('meta[name="description"]'); if (md) md.setAttribute('content', metaDescription);
+                      var canonical = document.querySelector('link[rel="canonical"]'); if (canonical) canonical.setAttribute('href', normalizedUrl);
+                      var ogT = document.querySelector('meta[property=\"og:title\"]'); if (ogT) ogT.setAttribute('content', title);
+                      var ogD = document.querySelector('meta[property=\"og:description\"]'); if (ogD) ogD.setAttribute('content', metaDescription);
+                      var ogU = document.querySelector('meta[property=\"og:url\"]'); if (ogU) ogU.setAttribute('content', normalizedUrl);
+                      var ogI = document.querySelector('meta[property=\"og:image\"]'); if (ogI && firstImage) ogI.setAttribute('content', firstImage);
+                      // og:locale
+                      var localeMap = { en: 'en_US', ru: 'ru_RU', ka: 'ka_GE' };
+                      var ogLocale = document.querySelector('meta[property="og:locale"]');
+                      if (!ogLocale) { ogLocale = document.createElement('meta'); ogLocale.setAttribute('property','og:locale'); document.head.appendChild(ogLocale); }
+                      ogLocale.setAttribute('content', localeMap[lang] || 'ka_GE');
+
+                      // hreflang alternates
+                      var base = 'https://minankari.art';
+                      var langs = ['en','ru','ka'];
+                      var created = 0;
+                      langs.forEach(function(l){
+                          var node = i18n[l] && i18n[l].mapValue && i18n[l].mapValue.fields;
+                          var lslug = node && node.slug && node.slug.stringValue;
+                          if (!lslug) return;
+                          var link = document.createElement('link'); link.setAttribute('rel','alternate'); link.setAttribute('hreflang', l); link.setAttribute('href', base + '/' + l + '/post.html?slug=' + encodeURIComponent(lslug)); document.head.appendChild(link); created++;
+                      });
+                      if (created) {
+                          var xd = document.createElement('link'); xd.rel='alternate'; xd.hreflang='x-default';
+                          var enSlugNode = i18n.en && i18n.en.mapValue && i18n.en.mapValue.fields && i18n.en.mapValue.fields.slug;
+                          xd.href = base + '/en/post.html?slug=' + encodeURIComponent(enSlugNode && enSlugNode.stringValue || slug);
+                          document.head.appendChild(xd);
+                      }
+
+                      // BlogPosting schema
+                      var schemaEl = document.getElementById('blog-post-schema');
+                      if (schemaEl) {
+                          var schema = { "@context":"https://schema.org", "@type":"BlogPosting", headline: title, description: metaDescription, image: firstImage ? [firstImage] : undefined, datePublished: (fields.timestamp && fields.timestamp.timestampValue) || new Date().toISOString(), dateModified: new Date().toISOString(), inLanguage: lang, author: { "@type":"Person", name: "Nino Kartsivadze" }, publisher: { "@type":"Person", name: "Nino Kartsivadze" }, mainEntityOfPage: pageUrl };
+                          schemaEl.textContent = JSON.stringify(schema);
+                      }
+
+                      // Breadcrumbs
+                      var breadcrumb = document.getElementById('post-breadcrumb-json');
+                      if (!breadcrumb) { breadcrumb = document.createElement('script'); breadcrumb.type='application/ld+json'; breadcrumb.id='post-breadcrumb-json'; document.head.appendChild(breadcrumb); }
+                      breadcrumb.textContent = JSON.stringify({ "@context":"https://schema.org", "@type":"BreadcrumbList", itemListElement: [ { "@type":"ListItem", position: 1, name: "Blog", item: base + "/blog.html" }, { "@type":"ListItem", position: 2, name: title, item: normalizedUrl } ] });
+                  })
+                  .catch(function(){});
+            } catch(e) {}
+        })();
+    </script>
 
     <!-- ИЗМЕНЕНИЕ: Добавляем пустую заглушку для Schema, которую заполнит JavaScript -->
     <script type="application/ld+json" id="blog-post-schema">{}</script>
@@ -98,7 +183,7 @@
         <p></p> 
     </footer>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://www.youtube.com/iframe_api" async defer></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -266,7 +351,7 @@
                 
                 document.title = `${seoTitle} | Nino Kartsivadze`;
                 document.querySelector('meta[name="description"]').setAttribute('content', metaDescription);
-                document.querySelector('link[rel="canonical"]').setAttribute('href', window.location.href);
+                (function(){ const u = new URL(window.location.href); const keep = new Set(['slug']); Array.from(u.searchParams.keys()).forEach(k => { if(!keep.has(k)) u.searchParams.delete(k); }); u.hash = ''; document.querySelector('link[rel="canonical"]').setAttribute('href', u.toString()); })();
                 // Обновляем OG теги для соцсетей
                 document.querySelector('meta[property="og:title"]').setAttribute('content', seoTitle);
                 document.querySelector('meta[property="og:description"]').setAttribute('content', metaDescription);
