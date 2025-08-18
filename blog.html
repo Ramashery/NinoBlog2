@@ -3,37 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloisonné Enamel Art Blog | by Nino Kartsivadze</title>
-    <meta name="description" content="Read the latest news, stories, and articles from Nino Kartsivadze's cloisonne enamel art blog.">
+    <title>Cloisonné Enamel Art Blog | Georgian Minankari Stories by Nino Kartsivadze</title>
+    <meta name="description" content="Discover the art of cloisonne enamel through Nino Kartsivadze's blog. Read stories about Georgian Minankari traditions, jewelry-making techniques, and artistic inspiration from Tbilisi.">
+    <meta name="keywords" content="cloisonne enamel blog, minankari stories, Georgian art blog, jewelry making blog, traditional crafts, enamel techniques, Tbilisi artist blog">
+    <meta name="author" content="Nino Kartsivadze">
+    
+    <!-- Hreflang для многоязычной поддержки -->
+    <link rel="alternate" hreflang="en" href="https://minankari.art/blog.html" />
+    <link rel="alternate" hreflang="ru" href="https://minankari.art/ru/blog.html" />
+    <link rel="alternate" hreflang="ka" href="https://minankari.art/ka/blog.html" />
+    <link rel="alternate" hreflang="x-default" href="https://minankari.art/blog.html" />
+    
     <link rel="canonical" href="https://minankari.art/blog.html" />
 
-    <!-- ИЗМЕНЕНИЕ 1: Добавлены OG-теги для красивых ссылок в соцсетях -->
-    <meta property="og:title" content="Cloisonné Enamel Art Blog | by Nino Kartsivadze" />
+    <!-- Open Graph теги для социальных сетей -->
+    <meta property="og:title" content="Cloisonné Enamel Art Blog | Georgian Minankari Stories by Nino Kartsivadze" />
     <meta property="og:type" content="blog" />
-    <meta property="og:description" content="Read the latest news, stories, and articles from Nino Kartsivadze's cloisonne enamel art blog." />
-    <meta property="og:image" content="https://minankari.art/og-image-blog.jpg" /> <!-- ЗАМЕНИТЕ НА РЕАЛЬНУЮ ССЫЛКУ НА КАРТИНКУ-ОБЛОЖКУ ДЛЯ БЛОГА -->
+    <meta property="og:description" content="Discover the art of cloisonne enamel through Nino Kartsivadze's blog. Read stories about Georgian Minankari traditions, jewelry-making techniques, and artistic inspiration from Tbilisi." />
+    <meta property="og:image" content="https://minankari.art/images/og-image-blog.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Cloisonne enamel art blog by Nino Kartsivadze" />
     <meta property="og:url" content="https://minankari.art/blog.html" />
     <meta property="og:site_name" content="Cloisonne Enamel by Nino Kartsivadze" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ru_RU" />
+    <meta property="og:locale:alternate" content="ka_GE" />
+    
+    <!-- Twitter Card теги -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cloisonné Enamel Art Blog | Georgian Minankari Stories" />
+    <meta name="twitter:description" content="Discover the art of cloisonne enamel through Nino Kartsivadze's blog. Read stories about Georgian Minankari traditions and jewelry-making techniques." />
+    <meta name="twitter:image" content="https://minankari.art/images/og-image-blog.jpg" />
+    <meta name="twitter:image:alt" content="Cloisonne enamel art blog by Nino Kartsivadze" />
 
-    <!-- ИЗМЕНЕНИЕ 2: Добавлена Schema-разметка для поисковиков -->
+    <!-- Schema.org структурированные данные для блога -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Blog",
+      "@id": "https://minankari.art/blog.html#blog",
       "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://minankari.art/blog.html"
       },
       "name": "Cloisonné Enamel Art Blog",
-      "description": "Read the latest news, stories, and articles from Nino Kartsivadze's cloisonne enamel art blog.",
+      "alternateName": "Georgian Minankari Stories",
+      "description": "Discover the art of cloisonne enamel through Nino Kartsivadze's blog. Read stories about Georgian Minankari traditions, jewelry-making techniques, and artistic inspiration from Tbilisi.",
+      "url": "https://minankari.art/blog.html",
+      "inLanguage": ["en", "ru", "ka"],
+      "about": [
+        "Cloisonné Enamel",
+        "Minankari Art",
+        "Georgian Traditional Crafts",
+        "Jewelry Making",
+        "Artisan Techniques"
+      ],
+      "keywords": "cloisonne enamel blog, minankari stories, Georgian art blog, jewelry making blog, traditional crafts",
       "publisher": {
         "@type": "Person",
+        "@id": "https://minankari.art/#person",
+        "name": "Nino Kartsivadze",
+        "url": "https://minankari.art/about.html"
+      },
+      "author": {
+        "@type": "Person",
+        "@id": "https://minankari.art/#person",
         "name": "Nino Kartsivadze"
       },
-      "blogPost": [
-        // Этот массив можно оставить пустым, т.к. посты загружаются динамически.
-        // Google просканирует страницу и найдет ссылки на статьи сам.
-      ]
+      "image": "https://minankari.art/images/og-image-blog.jpg",
+      "blogPost": []
     }
     </script>
     
@@ -116,7 +155,7 @@
 
             function isYoutubeUrl(url) { return /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/.test(url); }
             function getYoutubeEmbedUrl(url) { let videoId; try { const urlObj = new URL(url); videoId = (urlObj.hostname === 'youtu.be') ? urlObj.pathname.slice(1) : urlObj.searchParams.get('v'); } catch(e) { return null; } return videoId ? `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&origin=${window.location.origin}` : null; }
-            function createMediaElement(mediaUrl) { if (isYoutubeUrl(mediaUrl)) { const embedUrl = getYoutubeEmbedUrl(mediaUrl); if (embedUrl) { const wrapper = document.createElement('div'); wrapper.className = 'slideshow-item slideshow-item-video'; const iframe = document.createElement('iframe'); iframe.src = embedUrl; wrapper.appendChild(iframe); return wrapper; } } else { const img = document.createElement('img'); img.src = mediaUrl; img.className = 'slideshow-item'; img.alt = 'Blog Post Image'; return img; } return null; }
+            function createMediaElement(mediaUrl, title = 'Blog post about cloisonne enamel art') { if (isYoutubeUrl(mediaUrl)) { const embedUrl = getYoutubeEmbedUrl(mediaUrl); if (embedUrl) { const wrapper = document.createElement('div'); wrapper.className = 'slideshow-item slideshow-item-video'; const iframe = document.createElement('iframe'); iframe.src = embedUrl; iframe.title = title + ' - YouTube Video'; wrapper.appendChild(iframe); return wrapper; } } else { const img = document.createElement('img'); img.src = mediaUrl; img.alt = title + ' - cloisonne enamel art'; img.className = 'slideshow-item'; img.loading = 'lazy'; return img; } return null; }
             function setupSlideshow(container) { const slides = Array.from(container.querySelectorAll('.slideshow-item, .slideshow-item-video')); if (slides.length <= 1) { if (slides.length === 1) slides[0].classList.add('active'); return; } const overlay = document.createElement('div'); overlay.className = 'slideshow-overlay'; container.appendChild(overlay); let currentIndex = 0, intervalId = setInterval(() => showSlide(currentIndex + 1), 4000); function showSlide(index) { const oldSlide = slides[currentIndex]; if (oldSlide) oldSlide.classList.remove('active'); currentIndex = (index + slides.length) % slides.length; const newSlide = slides[currentIndex]; if (newSlide) setTimeout(() => newSlide.classList.add('active'), 1300); } function manualSlide(dir) { clearInterval(intervalId); showSlide(currentIndex + dir); intervalId = setInterval(() => showSlide(currentIndex + 1), 4000); } let touchStartX = 0; overlay.addEventListener('mousedown', e => { touchStartX = e.clientX; clearInterval(intervalId); }); overlay.addEventListener('mouseup', e => { if (e.clientX < touchStartX - 50) manualSlide(1); else if (e.clientX > touchStartX + 50) manualSlide(-1); intervalId = setInterval(() => showSlide(currentIndex + 1), 4000); }); showSlide(0); }
 
             async function loadBlogPosts() {

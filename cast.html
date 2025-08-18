@@ -4,28 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Artisan Cast Jewelry | Nino Kartsivadze</title>
-    <meta name="description" content="Explore an exclusive collection of handcrafted cast gold, silver, and bronze jewelry by Georgian artist Nino Kartsivadze.">
+    <title>Artisan Cast Jewelry Collection | Gold, Silver & Bronze by Nino Kartsivadze | Georgia</title>
+    <meta name="description" content="Explore an exclusive collection of handcrafted cast gold, silver, and bronze jewelry by Georgian artist Nino Kartsivadze. Unique designs combining traditional Georgian techniques with contemporary aesthetics.">
+    <meta name="keywords" content="cast jewelry, gold jewelry, silver jewelry, bronze jewelry, Georgian cast jewelry, artisan metalwork, handmade cast jewelry, Tbilisi jewelry, traditional casting">
+    <meta name="author" content="Nino Kartsivadze">
+    
+    <!-- Hreflang для многоязычной поддержки -->
+    <link rel="alternate" hreflang="en" href="https://minankari.art/cast.html" />
+    <link rel="alternate" hreflang="ru" href="https://minankari.art/ru/cast.html" />
+    <link rel="alternate" hreflang="ka" href="https://minankari.art/ka/cast.html" />
+    <link rel="alternate" hreflang="x-default" href="https://minankari.art/cast.html" />
     
     <link rel="canonical" href="https://minankari.art/cast.html" />
 
-    <meta property="og:title" content="Artisan Cast Jewelry Collection | Nino Kartsivadze" />
+    <!-- Open Graph теги для социальных сетей -->
+    <meta property="og:title" content="Artisan Cast Jewelry Collection | Gold, Silver & Bronze by Nino Kartsivadze" />
     <meta property="og:type" content="website" />
-    <meta property="og:description" content="Explore an exclusive collection of handcrafted cast gold, silver, and bronze jewelry by Georgian artist Nino Kartsivadze." />
-    <meta property="og:image" content="https://minankari.art/og-image-cast.jpg" />
+    <meta property="og:description" content="Explore an exclusive collection of handcrafted cast gold, silver, and bronze jewelry by Georgian artist Nino Kartsivadze. Unique designs combining traditional Georgian techniques with contemporary aesthetics." />
+    <meta property="og:image" content="https://minankari.art/images/og-image-cast.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Handcrafted cast jewelry collection by Nino Kartsivadze" />
     <meta property="og:url" content="https://minankari.art/cast.html" />
     <meta property="og:site_name" content="Cloisonne Enamel & Cast Jewelry by Nino Kartsivadze" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ru_RU" />
+    <meta property="og:locale:alternate" content="ka_GE" />
+    
+    <!-- Twitter Card теги -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Artisan Cast Jewelry Collection | Gold, Silver & Bronze" />
+    <meta name="twitter:description" content="Explore an exclusive collection of handcrafted cast gold, silver, and bronze jewelry by Georgian artist Nino Kartsivadze." />
+    <meta name="twitter:image" content="https://minankari.art/images/og-image-cast.jpg" />
+    <meta name="twitter:image:alt" content="Handcrafted cast jewelry collection by Nino Kartsivadze" />
 
+    <!-- Schema.org структурированные данные для коллекции -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
+      "@id": "https://minankari.art/cast.html#collection",
       "name": "Cast Gold, Silver & Bronze Collection by Nino Kartsivadze",
-      "description": "A collection of handcrafted cast jewelry in gold, silver and bronze, created by the Georgian artist Nino Kartsivadze.",
+      "alternateName": "Artisan Cast Jewelry Collection",
+      "description": "A collection of handcrafted cast jewelry in gold, silver and bronze, created by the Georgian artist Nino Kartsivadze. Unique designs combining traditional Georgian techniques with contemporary aesthetics.",
       "url": "https://minankari.art/cast.html",
+      "inLanguage": ["en", "ru", "ka"],
+      "about": [
+        "Cast Jewelry",
+        "Gold Jewelry",
+        "Silver Jewelry", 
+        "Bronze Jewelry",
+        "Georgian Metalwork",
+        "Artisan Jewelry"
+      ],
+      "keywords": "cast jewelry, gold jewelry, silver jewelry, bronze jewelry, Georgian cast jewelry, artisan metalwork",
+      "image": "https://minankari.art/images/og-image-cast.jpg",
+      "mainEntity": {
+        "@type": "ItemList",
+        "name": "Cast Jewelry Collection",
+        "description": "Handcrafted cast jewelry pieces in precious metals",
+        "numberOfItems": "Variable"
+      },
       "publisher": {
         "@type": "Person",
+        "@id": "https://minankari.art/#person",
+        "name": "Nino Kartsivadze",
+        "url": "https://minankari.art/about.html"
+      },
+      "author": {
+        "@type": "Person",
+        "@id": "https://minankari.art/#person",
         "name": "Nino Kartsivadze"
+      },
+      "creator": {
+        "@type": "Person",
+        "@id": "https://minankari.art/#person",
+        "name": "Nino Kartsivadze"
+      },
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://minankari.art/#website",
+        "name": "Cloisonne Enamel by Nino Kartsivadze"
       }
     }
     </script>
@@ -153,7 +212,7 @@
                 });
             }
 
-            function createMediaElement(mediaUrl) { if (isYoutubeUrl(mediaUrl)) { const embedUrl = getYoutubeEmbedUrl(mediaUrl); if (embedUrl) { const wrapper = document.createElement('div'); wrapper.className = 'slideshow-item slideshow-item-video'; const iframe = document.createElement('iframe'); iframe.src = embedUrl; wrapper.appendChild(iframe); return wrapper; } } else { const img = document.createElement('img'); img.src = mediaUrl; img.className = 'slideshow-item'; return img; } return null; }
+            function createMediaElement(mediaUrl, title = 'Cast jewelry by Nino Kartsivadze') { if (isYoutubeUrl(mediaUrl)) { const embedUrl = getYoutubeEmbedUrl(mediaUrl); if (embedUrl) { const wrapper = document.createElement('div'); wrapper.className = 'slideshow-item slideshow-item-video'; const iframe = document.createElement('iframe'); iframe.src = embedUrl; iframe.title = title + ' - YouTube Video'; wrapper.appendChild(iframe); return wrapper; } } else { const img = document.createElement('img'); img.src = mediaUrl; img.alt = title + ' - handcrafted cast jewelry'; img.className = 'slideshow-item'; img.loading = 'lazy'; return img; } return null; }
 
             function renderProducts(subCategoryFilter) {
                 const productsContainer = document.getElementById('products-container');
