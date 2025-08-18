@@ -6,6 +6,8 @@
                 var params = new URLSearchParams(location.search);
                 var slug = params.get('slug');
                 var lang = (location.pathname.split('/').filter(Boolean).find(function(p){return ['en','ru','ka'].indexOf(p)>-1;})||'ru');
+                document.documentElement.lang = lang;
+                if (params.get('no_early_seo') === '1' || (function(){try{return localStorage.getItem('seoEarly')==='off';}catch(e){return false;}})()) return;
                 if (!slug) return;
                 var endpoint = "https://firestore.googleapis.com/v1/projects/"+PROJECT_ID+"/databases/(default)/documents:runQuery?key="+API_KEY;
                 var body = { structuredQuery: { from: [{ collectionId: 'blog_posts' }], where: { fieldFilter: { field: { fieldPath: 'i18n.'+lang+'.slug' }, op: 'EQUAL', value: { stringValue: slug } } }, limit: 1 } };
@@ -37,11 +39,40 @@
                       var ogD = document.querySelector('meta[property=\"og:description\"]'); if (ogD) ogD.setAttribute('content', metaDescription);
                       var ogU = document.querySelector('meta[property=\"og:url\"]'); if (ogU) ogU.setAttribute('content', normalizedUrl);
                       var ogI = document.querySelector('meta[property=\"og:image\"]'); if (ogI && firstImage) ogI.setAttribute('content', firstImage);
+                      // og:locale
+                      var localeMap = { en: 'en_US', ru: 'ru_RU', ka: 'ka_GE' };
+                      var ogLocale = document.querySelector('meta[property="og:locale"]');
+                      if (!ogLocale) { ogLocale = document.createElement('meta'); ogLocale.setAttribute('property','og:locale'); document.head.appendChild(ogLocale); }
+                      ogLocale.setAttribute('content', localeMap[lang] || 'ru_RU');
+
+                      // hreflang alternates
+                      var base = 'https://minankari.art';
+                      var langs = ['en','ru','ka'];
+                      var created = 0;
+                      langs.forEach(function(l){
+                          var node = i18n[l] && i18n[l].mapValue && i18n[l].mapValue.fields;
+                          var lslug = node && node.slug && node.slug.stringValue;
+                          if (!lslug) return;
+                          var link = document.createElement('link'); link.setAttribute('rel','alternate'); link.setAttribute('hreflang', l); link.setAttribute('href', base + '/' + l + '/post.html?slug=' + encodeURIComponent(lslug)); document.head.appendChild(link); created++;
+                      });
+                      if (created) {
+                          var xd = document.createElement('link'); xd.rel='alternate'; xd.hreflang='x-default';
+                          var enSlugNode = i18n.en && i18n.en.mapValue && i18n.en.mapValue.fields && i18n.en.mapValue.fields.slug;
+                          xd.href = base + '/en/post.html?slug=' + encodeURIComponent(enSlugNode && enSlugNode.stringValue || slug);
+                          document.head.appendChild(xd);
+                      }
+
+                      // BlogPosting schema
                       var schemaEl = document.getElementById('blog-post-schema');
                       if (schemaEl) {
-                          var schema = { "@context":"https://schema.org", "@type":"Article", headline: title, description: metaDescription, image: firstImage ? [firstImage] : undefined, datePublished: new Date().toISOString(), mainEntityOfPage: pageUrl };
+                          var schema = { "@context":"https://schema.org", "@type":"BlogPosting", headline: title, description: metaDescription, image: firstImage ? [firstImage] : undefined, datePublished: (fields.timestamp && fields.timestamp.timestampValue) || new Date().toISOString(), dateModified: new Date().toISOString(), inLanguage: lang, author: { "@type":"Person", name: "Nino Kartsivadze" }, publisher: { "@type":"Person", name: "Nino Kartsivadze" }, mainEntityOfPage: pageUrl };
                           schemaEl.textContent = JSON.stringify(schema);
                       }
+
+                      // Breadcrumbs
+                      var breadcrumb = document.getElementById('post-breadcrumb-json');
+                      if (!breadcrumb) { breadcrumb = document.createElement('script'); breadcrumb.type='application/ld+json'; breadcrumb.id='post-breadcrumb-json'; document.head.appendChild(breadcrumb); }
+                      breadcrumb.textContent = JSON.stringify({ "@context":"https://schema.org", "@type":"BreadcrumbList", itemListElement: [ { "@type":"ListItem", position: 1, name: "Blog", item: base + "/blog.html" }, { "@type":"ListItem", position: 2, name: title, item: normalizedUrl } ] });
                   })
                   .catch(function(){});
             } catch(e) {}
