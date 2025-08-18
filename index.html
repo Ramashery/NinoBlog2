@@ -19,7 +19,13 @@
     <meta property="og:url" content="https://minankari.art/index.html" />
     <meta property="og:site_name" content="Cloisonne Enamel by Nino Kartsivadze" />
 
-    <!-- ИЗМЕНЕНИЕ 3: Добавлена Schema-разметка для поисковиков -->
+    <!-- ИЗМЕНЕНИЕ 4: Добавлены hreflang теги для многоязычности -->
+    <link rel="alternate" hreflang="en" href="https://minankari.art/" />
+    <link rel="alternate" hreflang="ru" href="https://minankari.art/ru/" />
+    <link rel="alternate" hreflang="ka" href="https://minankari.art/ka/" />
+    <link rel="alternate" hreflang="x-default" href="https://minankari.art/" />
+
+    <!-- ИЗМЕНЕНИЕ 3: Улучшенная Schema-разметка для поисковиков -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -29,16 +35,26 @@
           "name": "Nino Kartsivadze",
           "url": "https://minankari.art/about.html",
           "jobTitle": "Cloisonné Enamel Artist",
-          "knowsAbout": ["Cloisonné", "Enamel jewelry", "Minankari", "Artisan Jewelry"],
+          "knowsAbout": ["Cloisonné", "Enamel jewelry", "Minankari", "Artisan Jewelry", "Georgian jewelry", "Handcrafted jewelry"],
           "homeLocation": {
             "@type": "Place",
-            "name": "Tbilisi, Georgia"
-          }
+            "name": "Tbilisi, Georgia",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Tbilisi",
+              "addressCountry": "GE"
+            }
+          },
+          "sameAs": [
+            "https://minankari.art/",
+            "https://minankari.art/about.html"
+          ]
         },
         {
           "@type": "WebSite",
           "name": "Cloisonne Enamel by Nino Kartsivadze",
           "url": "https://minankari.art/",
+          "description": "Exclusive handmade cloisonne enamel jewelry by Nino Kartsivadze from Tbilisi, Georgia",
           "author": {
             "@type": "Person",
             "name": "Nino Kartsivadze"
@@ -51,6 +67,25 @@
             "@type": "SearchAction",
             "target": "https://minankari.art/index.html?q={search_term_string}",
             "query-input": "required name=search_term_string"
+          },
+          "inLanguage": ["en", "ru", "ka"],
+          "availableLanguage": ["en", "ru", "ka"]
+        },
+        {
+          "@type": "Organization",
+          "name": "Cloisonne Enamel by Nino Kartsivadze",
+          "url": "https://minankari.art/",
+          "logo": "https://minankari.art/logo.png",
+          "description": "Handcrafted cloisonne enamel jewelry studio in Tbilisi, Georgia",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Tbilisi",
+            "addressCountry": "GE"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "availableLanguage": ["en", "ru", "ka"]
           }
         }
       ]

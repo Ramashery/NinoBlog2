@@ -1,0 +1,75 @@
+<!-- Google Analytics 4 (GA4) код -->
+<!-- Замените GA_MEASUREMENT_ID на ваш реальный ID измерения -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'GA_MEASUREMENT_ID', {
+    page_title: document.title,
+    page_location: window.location.href,
+    custom_map: {
+      'custom_parameter_1': 'jewelry_type',
+      'custom_parameter_2': 'artist_name',
+      'custom_parameter_3': 'location'
+    }
+  });
+  
+  // Отслеживание событий
+  gtag('event', 'page_view', {
+    page_title: document.title,
+    page_location: window.location.href,
+    language: document.documentElement.lang
+  });
+  
+  // Отслеживание кликов по продуктам
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.product-card')) {
+      gtag('event', 'select_item', {
+        item_category: 'jewelry',
+        item_category2: 'cloisonne_enamel',
+        currency: 'USD',
+        value: 1
+      });
+    }
+  });
+  
+  // Отслеживание времени на странице
+  let startTime = Date.now();
+  window.addEventListener('beforeunload', function() {
+    let timeOnPage = Date.now() - startTime;
+    gtag('event', 'timing_complete', {
+      name: 'page_view',
+      value: Math.round(timeOnPage / 1000)
+    });
+  });
+</script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager -->
+
+<!-- Yandex.Metrika -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(YOUR_COUNTER_ID, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/YOUR_COUNTER_ID" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika -->
