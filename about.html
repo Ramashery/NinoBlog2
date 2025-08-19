@@ -83,29 +83,6 @@
         <p class="subtitle">NINO KARTSIVADZE</p>
     </header>
     <nav>
-        <div class="nav-link-container">
-            <a href="index.html" class="nav-link has-dropdown">ENAMEL</a>
-            <div class="sub-nav">
-                <a href="#" class="nav-link" data-category="all">SHOW ALL</a>
-            </div>
-        </div>
-        <div class="nav-link-container">
-            <a href="cast.html" class="nav-link has-dropdown">CAST</a>
-            <div class="sub-nav">
-                <a href="#" class="nav-link" data-category="all">SHOW ALL</a>
-            </div>
-        </div>
-        <div class="nav-link-container">
-            <a href="about.html" class="nav-link">ABOUT ME</a>
-        </div>
-        <div class="nav-link-container">
-            <a href="blog.html" class="nav-link has-dropdown">BLOG</a>
-            <div class="sub-nav">
-                <a href="blog.html?lang=en" class="nav-link">ENGLISH</a>
-                <a href="blog.html?lang=ka" class="nav-link">GEORGIAN</a>
-                <a href="blog.html?lang=ru" class="nav-link">RUSSIAN</a>
-            </div>
-        </div>
     </nav>
     
     <div id="page-content-wrapper">
@@ -144,8 +121,20 @@
             if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
             const db = firebase.firestore();
 
-            const particleConfig = { "particles": { "number": { "value": 80, "density": { "enable": true, "value_area": 800 }}, "color": { "value": "#D4AF37" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1 }}, "size": { "value": 3, "random": true, "anim": { "enable": true, "speed": 2, "size_min": 0.1 }}, "line_linked": { "enable": true, "distance": 150, "color": "#D4AF37", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "out_mode": "out" }}, "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }}}, "retina_detect": true };
+            const particleConfig = { "particles": { "number": { "value": 80, "density": { "enable": true, "value_area": 800 }}, "color": { "value": "#D4AF37" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1 }}, "size": { "value": 3, "random": true, "anim": { "enable": true, "speed": 2, "size_min": 0.1 }}, "line_linked": { "enable": true, "distance": 150, "color": "#D4AF37", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "out_mode": "out" }}, "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }}}, "retina_detect": true };
             particlesJS('particles-js', particleConfig);
+
+            let categories = {};
+
+            async function loadCategories() {
+                try {
+                    const categoriesSnapshot = await db.collection('categories').orderBy('name').get();
+                    categories = {};
+                    categoriesSnapshot.forEach(doc => { categories[doc.id] = { id: doc.id, ...doc.data() }; });
+                } catch (error) {
+                    console.error("Error loading categories:", error);
+                }
+            }
 
             function isYoutubeUrl(url) { return /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/.test(url); }
             function getYoutubeEmbedUrl(url) { let videoId; try { const urlObj = new URL(url); videoId = (urlObj.hostname === 'youtu.be') ? urlObj.pathname.slice(1) : urlObj.searchParams.get('v'); } catch(e) { return null; } if (!videoId) return null; const params = new URLSearchParams({ enablejsapi: 1, autoplay: 1, mute: 1, loop: 1, playlist: videoId, origin: window.location.origin, controls: 0 }); return `https://www.youtube.com/embed/${videoId}?${params.toString()}`; }
@@ -168,14 +157,18 @@
                         text: 'ENAMEL', 
                         id: 'nav-enamel',
                         hasDropdown: true,
-                        dropdownItems: []
+                        dropdownItems: categories ? Object.values(categories)
+                            .filter(cat => cat && cat.parent === 'enamel')
+                            .map(cat => ({ text: cat.name.toUpperCase(), category: cat.id })) : []
                     },
                     { 
                         href: 'cast.html', 
                         text: 'CAST', 
                         id: 'nav-cast',
                         hasDropdown: true,
-                        dropdownItems: []
+                        dropdownItems: categories ? Object.values(categories)
+                            .filter(cat => cat && cat.parent === 'cast')
+                            .map(cat => ({ text: cat.name.toUpperCase(), category: cat.id })) : []
                     },
                     { href: 'about.html', text: 'ABOUT ME', id: 'nav-about' },
                     { 
@@ -226,13 +219,56 @@
                             allLink.textContent = 'SHOW ALL';
                             allLink.dataset.category = 'all';
                             dropdown.appendChild(allLink);
+                            
+                            // Добавляем подкатегории если они есть
+                            if (linkInfo.dropdownItems.length > 0) {
+                                linkInfo.dropdownItems.forEach(item => {
+                                    const categoryLink = document.createElement('a');
+                                    categoryLink.href = '#';
+                                    categoryLink.className = 'nav-link';
+                                    categoryLink.textContent = item.text;
+                                    categoryLink.dataset.category = item.category;
+                                    dropdown.appendChild(categoryLink);
+                                });
+                            }
                         }
                         
                         linkContainer.appendChild(dropdown);
+                        
+                        // Добавляем обработчики для подкатегорий товаров
+                        if (linkInfo.id !== 'nav-blog') {
+                            dropdown.querySelectorAll('[data-category]').forEach(link => {
+                                link.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    dropdown.querySelectorAll('[data-category]').forEach(l => l.classList.remove('active'));
+                                    this.classList.add('active');
+                                    // Для SHOW ALL просто убираем активность, для подкатегорий можно добавить логику
+                                    if (this.dataset.category === 'all') {
+                                        // SHOW ALL - убираем активность у всех подкатегорий
+                                        dropdown.querySelectorAll('[data-category]').forEach(l => l.classList.remove('active'));
+                                        this.classList.add('active');
+                                    }
+                                });
+                            });
+                        }
                     }
                     
                     nav.appendChild(linkContainer);
                 });
+                
+                // Обработка URL параметров для категорий
+                const urlParams = new URLSearchParams(window.location.search);
+                const categoryParam = urlParams.get('category');
+                if (categoryParam) {
+                    const linkToActivate = document.querySelector(`[data-category="${categoryParam}"]`);
+                    if (linkToActivate) {
+                        document.querySelectorAll('[data-category]').forEach(l => l.classList.remove('active'));
+                        linkToActivate.classList.add('active');
+                    }
+                } else {
+                    const defaultLink = document.querySelector(`[data-category="all"]`);
+                    if (defaultLink) defaultLink.classList.add('active');
+                }
             }
             
             async function populateAboutContent() {
@@ -300,8 +336,10 @@
             loadRelatedPosts();
             loadRandomProducts();
             
-            // Рендерим навигацию
-            // renderNavigation();
+            // Загружаем категории и рендерим навигацию
+            loadCategories().then(() => {
+                renderNavigation();
+            });
         });
     </script>
 </body>

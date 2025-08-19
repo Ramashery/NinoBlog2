@@ -135,29 +135,6 @@
         <p class="subtitle">NINO KARTSIVADZE</p>
     </header>
     <nav>
-        <div class="nav-link-container">
-            <a href="index.html" class="nav-link has-dropdown">ENAMEL</a>
-            <div class="sub-nav">
-                <a href="#" class="nav-link" data-category="all">SHOW ALL</a>
-            </div>
-        </div>
-        <div class="nav-link-container">
-            <a href="cast.html" class="nav-link has-dropdown">CAST</a>
-            <div class="sub-nav">
-                <a href="#" class="nav-link" data-category="all">SHOW ALL</a>
-            </div>
-        </div>
-        <div class="nav-link-container">
-            <a href="about.html" class="nav-link">ABOUT ME</a>
-        </div>
-        <div class="nav-link-container">
-            <a href="blog.html" class="nav-link has-dropdown">BLOG</a>
-            <div class="sub-nav">
-                <a href="blog.html?lang=en" class="nav-link">ENGLISH</a>
-                <a href="blog.html?lang=ka" class="nav-link">GEORGIAN</a>
-                <a href="blog.html?lang=ru" class="nav-link">RUSSIAN</a>
-            </div>
-        </div>
     </nav>
     <div class="container">
         <h1 id="main-h1">Artisan Georgian Enamel Jewelry</h1>
@@ -366,17 +343,8 @@
                     renderAdminUI();
                     
                     // Обновляем навигацию после загрузки категорий
-                    // renderNavigation();
+                    renderNavigation();
                     
-                    // Добавляем обработчики для статической навигации
-                    document.querySelectorAll('[data-category]').forEach(link => {
-                        link.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            document.querySelectorAll('[data-category]').forEach(l => l.classList.remove('active'));
-                            this.classList.add('active');
-                            renderProducts(this.dataset.category);
-                        });
-                    });
                 } catch (error) { console.error("Error loading data from Firebase:", error); } 
             }
 
@@ -482,6 +450,12 @@
                                     e.preventDefault();
                                     dropdown.querySelectorAll('[data-category]').forEach(l => l.classList.remove('active'));
                                     this.classList.add('active');
+                                    // Для SHOW ALL просто убираем активность, для подкатегорий можно добавить логику
+                                    if (this.dataset.category === 'all') {
+                                        // SHOW ALL - убираем активность у всех подкатегорий
+                                        dropdown.querySelectorAll('[data-category]').forEach(l => l.classList.remove('active'));
+                                        this.classList.add('active');
+                                    }
                                     renderProducts(this.dataset.category);
                                 });
                             });
@@ -490,86 +464,24 @@
                     
                     nav.appendChild(linkContainer);
                 });
-            }
-
-            function setupNavigationListeners() {
-                document.querySelectorAll('.has-dropdown > .nav-link').forEach(trigger => {
-                    trigger.addEventListener('click', function(e) {
-                        // Prevent default only if it's NOT a blog link (blog links should navigate)
-                        const linkId = this.textContent.trim().toLowerCase();
-                        if (linkId !== 'blog') {
-                            e.preventDefault();
-                        } else {
-                            // If it IS the main blog link, make it toggle the menu instead of navigating
-                            if (this.parentElement.querySelector('.dropdown-menu')) {
-                                e.preventDefault();
-                            }
-                        }
-
-                        const dropdownMenu = this.nextElementSibling;
-                        const wasActive = dropdownMenu.classList.contains('active');
-                        
-                        document.querySelectorAll('.dropdown-menu.active').forEach(menu => menu.classList.remove('active'));
-                        document.querySelectorAll('.has-dropdown > .nav-link.active').forEach(link => {
-                           if (link.textContent.toLowerCase().trim() !== CURRENT_PAGE_TYPE) {
-                               link.classList.remove('active');
-                           }
-                        });
-                        
-                        if (!wasActive) {
-                            dropdownMenu.classList.add('active');
-                            this.classList.add('active');
-                        } else {
-                            if (this.textContent.toLowerCase().trim() !== CURRENT_PAGE_TYPE) {
-                                this.classList.remove('active');
-                            }
-                        }
-                    });
-                });
-
-                document.addEventListener('click', function(e) {
-                    if (!e.target.closest('.has-dropdown')) {
-                        document.querySelectorAll('.dropdown-menu.active').forEach(menu => menu.classList.remove('active'));
-                        document.querySelectorAll('.has-dropdown > .nav-link.active').forEach(link => {
-                            if (link.textContent.toLowerCase().trim() !== CURRENT_PAGE_TYPE) {
-                                link.classList.remove('active');
-                            }
-                        });
-                    }
-                });
-
-                document.querySelectorAll('.dropdown-link[data-category]').forEach(link => {
-                    link.addEventListener('click', function(e) {
-                        const parentPageType = this.closest('.has-dropdown').querySelector('.nav-link').textContent.toLowerCase().trim();
-                        if (parentPageType === CURRENT_PAGE_TYPE) {
-                            e.preventDefault();
-                            document.querySelectorAll('.dropdown-link.active').forEach(l => l.classList.remove('active'));
-                            this.classList.add('active');
-                            renderProducts(this.dataset.category);
-                            const dropdownMenu = this.closest('.dropdown-menu');
-                            if (dropdownMenu) {
-                                dropdownMenu.classList.remove('active');
-                            }
-                        }
-                    });
-                });
                 
+                // Обработка URL параметров для категорий
                 const urlParams = new URLSearchParams(window.location.search);
                 const categoryParam = urlParams.get('category');
                 if (categoryParam) {
-                    const linkToActivate = document.querySelector(`.dropdown-link[data-category="${categoryParam}"]`);
+                    const linkToActivate = document.querySelector(`[data-category="${categoryParam}"]`);
                     if (linkToActivate) {
-                        document.querySelectorAll('.dropdown-link.active').forEach(l => l.classList.remove('active'));
+                        document.querySelectorAll('[data-category]').forEach(l => l.classList.remove('active'));
                         linkToActivate.classList.add('active');
                         renderProducts(categoryParam);
                     }
                 } else {
-                    const defaultLink = document.querySelector(`.dropdown-link[data-category="all"]`);
-                    if(defaultLink) defaultLink.classList.add('active');
+                    const defaultLink = document.querySelector(`[data-category="all"]`);
+                    if (defaultLink) defaultLink.classList.add('active');
                     renderProducts('all');
                 }
             }
-            
+
             function createMediaElement(mediaUrl) { if (isYoutubeUrl(mediaUrl)) { const embedUrl = getYoutubeEmbedUrl(mediaUrl); if (embedUrl) { const wrapper = document.createElement('div'); wrapper.className = 'slideshow-item slideshow-item-video'; const iframe = document.createElement('iframe'); iframe.src = embedUrl; wrapper.appendChild(iframe); return wrapper; } } else { const img = document.createElement('img'); img.src = mediaUrl; img.className = 'slideshow-item'; return img; } return null; }
             
             function renderProducts(subCategoryFilter) {
