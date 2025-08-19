@@ -136,7 +136,31 @@
         <a href="index.html" style="text-decoration: none;"><div class="logo"><span>C</span><span>L</span><span>O</span><span>I</span><span>S</span><span>O</span><span>N</span><span>N</span><span>É</span> <span>E</span><span>N</span><span>A</span><span>M</span><span>E</span><span>L</span></div></a>
         <p class="subtitle">NINO KARTSIVADZE</p>
     </header>
-    <nav></nav>
+    <nav>
+        <div class="nav-link-container">
+            <a href="index.html" class="nav-link has-dropdown">ENAMEL</a>
+            <div class="sub-nav">
+                <a href="#" class="nav-link" data-category="all">SHOW ALL</a>
+            </div>
+        </div>
+        <div class="nav-link-container">
+            <a href="cast.html" class="nav-link has-dropdown">CAST</a>
+            <div class="sub-nav">
+                <a href="#" class="nav-link" data-category="all">SHOW ALL</a>
+            </div>
+        </div>
+        <div class="nav-link-container">
+            <a href="about.html" class="nav-link">ABOUT ME</a>
+        </div>
+        <div class="nav-link-container">
+            <a href="blog.html" class="nav-link has-dropdown">BLOG</a>
+            <div class="sub-nav">
+                <a href="blog.html?lang=en" class="nav-link">ENGLISH</a>
+                <a href="blog.html?lang=ka" class="nav-link">GEORGIAN</a>
+                <a href="blog.html?lang=ru" class="nav-link">RUSSIAN</a>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <h1 id="main-h1">Artisan Georgian Enamel Jewelry</h1>
         <h2 id="main-h2">Discover the Art of Minankari by Nino Kartsivadze</h2>
@@ -342,6 +366,19 @@
                     renderNavigation(); 
                     renderProducts('all'); 
                     renderAdminUI(); 
+                    
+                    // Обновляем навигацию после загрузки категорий
+                    renderNavigation();
+                    
+                    // Добавляем обработчики для статической навигации
+                    document.querySelectorAll('[data-category]').forEach(link => {
+                        link.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.querySelectorAll('[data-category]').forEach(l => l.classList.remove('active'));
+                            this.classList.add('active');
+                            renderProducts(this.dataset.category);
+                        });
+                    });
                 } catch (error) { console.error("Error loading data from Firebase:", error); } 
             }
 
@@ -424,14 +461,17 @@
                             allLink.dataset.category = 'all';
                             dropdown.appendChild(allLink);
                             
-                            linkInfo.dropdownItems.forEach(item => {
-                                const categoryLink = document.createElement('a');
-                                categoryLink.href = '#';
-                                categoryLink.className = 'nav-link';
-                                categoryLink.textContent = item.text;
-                                categoryLink.dataset.category = item.category;
-                                dropdown.appendChild(categoryLink);
-                            });
+                            // Добавляем подкатегории если они есть
+                            if (linkInfo.dropdownItems.length > 0) {
+                                linkInfo.dropdownItems.forEach(item => {
+                                    const categoryLink = document.createElement('a');
+                                    categoryLink.href = '#';
+                                    categoryLink.className = 'nav-link';
+                                    categoryLink.textContent = item.text;
+                                    categoryLink.dataset.category = item.category;
+                                    dropdown.appendChild(categoryLink);
+                                });
+                            }
                         }
                         
                         linkContainer.appendChild(dropdown);
