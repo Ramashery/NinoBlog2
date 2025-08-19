@@ -142,11 +142,11 @@
                     products = {};
                     productsSnapshot.forEach(doc => { products[doc.id] = { id: doc.id, ...doc.data() }; });
                     
-                    renderNavigation();
+                    // renderNavigation();
                     renderProducts('all'); 
                     
                     // Обновляем навигацию после загрузки категорий
-                    renderNavigation();
+                    // renderNavigation();
                 } catch (error) {
                     console.error("Error loading data from Firebase:", error);
                 }
