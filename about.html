@@ -61,7 +61,18 @@
         .gold-button { display: inline-block; text-align: center; background: none; border: none; color: var(--primary); padding: 0.8rem 1.5rem; font-size: 1rem; border-radius: 50px; position: relative; overflow: hidden; cursor: pointer; z-index: 1; transition: color 0.3s; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light); }
         .gold-button::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary); z-index: -1; clip-path: circle(0% at 50% 50%); transition: clip-path 0.5s ease; }
         .gold-button:hover { color: var(--bg); } .gold-button:hover::before { clip-path: circle(100% at 50% 50%); }
-        header { padding: 4rem 2rem 2rem; display: flex; flex-direction: column; align-items: center; } header .logo { font-size: clamp(1.5rem, 6vw, 3.5rem); letter-spacing: clamp(0.15rem, 2vw, 0.5rem); white-space: nowrap; font-weight: 300; color: var(--primary); } header .subtitle { margin-top: 1rem; font-weight: 300; letter-spacing: 0.3rem; } nav { display: flex; justify-content: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; } .nav-link { margin: 0 1rem; color: var(--text-light); text-decoration: none; position: relative; padding: 0.5rem 0; } .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--primary); transition: width 0.3s ease; } .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        header { padding: 4rem 2rem 2rem; display: flex; flex-direction: column; align-items: center; } header .logo { font-size: clamp(1.5rem, 6vw, 3.5rem); letter-spacing: clamp(0.15rem, 2vw, 0.5rem); white-space: nowrap; font-weight: 300; color: var(--primary); } header .subtitle { margin-top: 1rem; font-weight: 300; letter-spacing: 0.3rem; } nav { display: flex; justify-content: center; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; flex-direction: row; } 
+        .main-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; width: 100%; } 
+        .sub-nav { display: none; width: 100%; margin-top: 1rem; border-top: 1px solid rgba(212, 175, 55, 0.1); padding-top: 1rem; } 
+        .nav-link { margin: 0 1rem; color: var(--text-light); text-decoration: none; position: relative; padding: 0.5rem 0; opacity: 0; animation: fadeIn 1s forwards; animation-delay: calc(var(--delay) * 0.2s); font-size: 0.9rem; cursor: pointer; } 
+        .nav-link.has-dropdown { position: relative; }
+        .nav-link.has-dropdown:hover .sub-nav { display: flex; }
+        .nav-link.has-dropdown .sub-nav { position: absolute; top: 100%; left: 0; background: var(--bg-dark); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 1rem; min-width: 200px; z-index: 1000; flex-direction: column; gap: 0.5rem; }
+        .nav-link.has-dropdown .sub-nav .nav-link { margin: 0; padding: 0.5rem; font-size: 0.8rem; }
+        .nav-link.has-dropdown .sub-nav .nav-link:hover { background: rgba(212, 175, 55, 0.1); border-radius: 4px; }
+        .nav-link-container { position: relative; }
+        .nav-link-container .nav-link { margin: 0 1rem; }
+        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--primary); transition: width 0.3s ease; } .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         #page-content-wrapper { display: none; } /* Скрываем контент до загрузки */
     </style>
 </head>
@@ -72,11 +83,7 @@
         <p class="subtitle">NINO KARTSIVADZE</p>
     </header>
     <nav>
-        <!-- ИЗМЕНЕНИЕ 3: Исправлена навигация -->
-        <a href="index.html" class="nav-link">ENAMEL</a>
-        <a href="cast.html" class="nav-link">CAST</a>
-        <a href="about.html" class="nav-link active">ABOUT ME</a>
-        <a href="blog.html" class="nav-link">BLOG</a>
+        <!-- Навигация будет создана динамически -->
     </nav>
     
     <div id="page-content-wrapper">
@@ -125,6 +132,86 @@
             
             async function loadRelatedPosts() { const container = document.getElementById('related-posts'); const grid = document.getElementById('related-posts-grid'); if (!container || !grid) return; grid.innerHTML = ''; const snapshot = await db.collection('blog_posts').orderBy('timestamp', 'desc').limit(3).get(); if (!snapshot.empty) { container.style.display = 'block'; setTimeout(() => container.classList.add('loaded'), 150); snapshot.docs.forEach(doc => { const post = doc.data(); let displayLang = '', displaySlug = '', displayTitle = '', displaySubtitle = ''; if (post.i18n?.en?.slug) { displayLang = 'en'; displaySlug = post.i18n.en.slug; displayTitle = post.i18n.en.title; displaySubtitle = post.i18n.en.subtitle; } else if (post.i18n?.ka?.slug) { displayLang = 'ka'; displaySlug = post.i18n.ka.slug; displayTitle = post.i18n.ka.title; displaySubtitle = post.i18n.ka.subtitle; } else if (post.i18n?.ru?.slug) { displayLang = 'ru'; displaySlug = post.i18n.ru.slug; displayTitle = post.i18n.ru.title; displaySubtitle = post.i18n.ru.subtitle; } else { return; } const cardLink = document.createElement('a'); cardLink.href = `${displayLang}/post.html?slug=${displaySlug}`; cardLink.className = 'blog-post-card'; const slideshowHTML = `<div class="slideshow-container">${(post.mediaUrls || ['https://via.placeholder.com/280x250.png/121212/D4AF37?text=No+Image']).map(url => createMediaElement(url, displayTitle)?.outerHTML || '').join('')}</div>`; const postInfoHTML = `<div class="post-card-content"><h3 class="post-card-title">${displayTitle || 'Untitled'}</h3>${displaySubtitle ? `<h4 class="post-card-subtitle">${displaySubtitle}</h4>` : ''}<p class="post-card-date">${new Date(post.timestamp.seconds * 1000).toLocaleDateString()}</p></div>`; cardLink.innerHTML = slideshowHTML + postInfoHTML; grid.appendChild(cardLink); setupSlideshow(cardLink.querySelector('.slideshow-container')); }); } }
             async function loadRandomProducts() { const container = document.getElementById('related-products'); const grid = document.getElementById('related-products-grid'); grid.innerHTML = ''; const snapshot = await db.collection('products').get(); let allProducts = []; snapshot.forEach(doc => allProducts.push(doc.data())); if (allProducts.length > 0) { const randomProducts = allProducts.sort(() => 0.5 - Math.random()).slice(0, 3); container.style.display = 'block'; setTimeout(() => container.classList.add('loaded'), 250); randomProducts.forEach(product => { const productCard = document.createElement('a'); productCard.href = `product.html?slug=${product.slug}`; productCard.className = 'product-card'; const slideshowHTML = `<div class="slideshow-container">${(product.images || []).map(url => createMediaElement(url, product.title)?.outerHTML || '').join('')}</div>`; const productInfoHTML = `<div class="product-info"><h3 class="product-title">${product.title}</h3><p class="product-price">${product.price}</p><div class="gold-button">VIEW DETAILS</div></div>`; productCard.innerHTML = slideshowHTML + productInfoHTML; grid.appendChild(productCard); setupSlideshow(productCard.querySelector('.slideshow-container')); }); } }
+            
+            function renderNavigation() {
+                const nav = document.querySelector('nav');
+                if (!nav) return;
+                nav.innerHTML = '';
+                let delay = 1;
+                
+                // Основная навигация с выпадающими меню
+                const mainLinks = [
+                    { 
+                        href: 'index.html', 
+                        text: 'ENAMEL', 
+                        id: 'nav-enamel',
+                        hasDropdown: true,
+                        dropdownItems: []
+                    },
+                    { 
+                        href: 'cast.html', 
+                        text: 'CAST', 
+                        id: 'nav-cast',
+                        hasDropdown: true,
+                        dropdownItems: []
+                    },
+                    { href: 'about.html', text: 'ABOUT ME', id: 'nav-about' },
+                    { 
+                        href: 'blog.html', 
+                        text: 'BLOG', 
+                        id: 'nav-blog',
+                        hasDropdown: true,
+                        dropdownItems: [
+                            { text: 'ENGLISH', lang: 'en' },
+                            { text: 'GEORGIAN', lang: 'ka' },
+                            { text: 'RUSSIAN', lang: 'ru' }
+                        ]
+                    }
+                ];
+
+                mainLinks.forEach(linkInfo => {
+                    const linkContainer = document.createElement('div');
+                    linkContainer.className = 'nav-link-container';
+                    
+                    const mainLink = document.createElement('a');
+                    mainLink.href = linkInfo.href;
+                    mainLink.id = linkInfo.id;
+                    mainLink.className = `nav-link ${linkInfo.hasDropdown ? 'has-dropdown' : ''}`;
+                    mainLink.style.setProperty('--delay', delay++);
+                    mainLink.textContent = linkInfo.text;
+                    
+                    linkContainer.appendChild(mainLink);
+                    
+                    // Создаем выпадающее меню если нужно
+                    if (linkInfo.hasDropdown && linkInfo.dropdownItems.length > 0) {
+                        const dropdown = document.createElement('div');
+                        dropdown.className = 'sub-nav';
+                        
+                        if (linkInfo.id === 'nav-blog') {
+                            // Для блога - языки
+                            linkInfo.dropdownItems.forEach(item => {
+                                const langLink = document.createElement('a');
+                                langLink.href = `${linkInfo.href}?lang=${item.lang}`;
+                                langLink.className = 'nav-link';
+                                langLink.textContent = item.text;
+                                dropdown.appendChild(langLink);
+                            });
+                        } else {
+                            // Для товаров - подкатегории
+                            const allLink = document.createElement('a');
+                            allLink.href = '#';
+                            allLink.className = 'nav-link';
+                            allLink.textContent = 'SHOW ALL';
+                            allLink.dataset.category = 'all';
+                            dropdown.appendChild(allLink);
+                        }
+                        
+                        linkContainer.appendChild(dropdown);
+                    }
+                    
+                    nav.appendChild(linkContainer);
+                });
+            }
             
             async function populateAboutContent() {
                 try {
@@ -190,6 +277,9 @@
             populateAboutContent();
             loadRelatedPosts();
             loadRandomProducts();
+            
+            // Рендерим навигацию
+            renderNavigation();
         });
     </script>
 </body>

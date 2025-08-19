@@ -64,7 +64,18 @@
         .post-title { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--primary); }
         .post-subtitle { font-size: 1rem; font-weight: 300; opacity: 0.8; margin-bottom: 1rem; line-height: 1.4; }
         .post-date { margin-top: auto; font-size: 0.8rem; opacity: 0.6; padding-top: 1rem; }
-        footer { text-align: center; padding: 2rem; margin-top: 4rem; } nav { display: flex; justify-content: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; } .nav-link { margin: 0 1rem; color: var(--text-light); text-decoration: none; position: relative; padding: 0.5rem 0; } .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--primary); transition: width 0.3s ease; } .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        footer { text-align: center; padding: 2rem; margin-top: 4rem; } nav { display: flex; justify-content: center; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; flex-direction: row; } 
+        .main-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; width: 100%; } 
+        .sub-nav { display: none; width: 100%; margin-top: 1rem; border-top: 1px solid rgba(212, 175, 55, 0.1); padding-top: 1rem; } 
+        .nav-link { margin: 0 1rem; color: var(--text-light); text-decoration: none; position: relative; padding: 0.5rem 0; opacity: 0; animation: fadeIn 1s forwards; animation-delay: calc(var(--delay) * 0.2s); font-size: 0.9rem; cursor: pointer; } 
+        .nav-link.has-dropdown { position: relative; }
+        .nav-link.has-dropdown:hover .sub-nav { display: flex; }
+        .nav-link.has-dropdown .sub-nav { position: absolute; top: 100%; left: 0; background: var(--bg-dark); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 1rem; min-width: 200px; z-index: 1000; flex-direction: column; gap: 0.5rem; }
+        .nav-link.has-dropdown .sub-nav .nav-link { margin: 0; padding: 0.5rem; font-size: 0.8rem; }
+        .nav-link.has-dropdown .sub-nav .nav-link:hover { background: rgba(212, 175, 55, 0.1); border-radius: 4px; }
+        .nav-link-container { position: relative; }
+        .nav-link-container .nav-link { margin: 0 1rem; }
+        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--primary); transition: width 0.3s ease; } .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .slideshow-container { width: 100%; height: 250px; position: relative; overflow: hidden; -webkit-mask-image: -webkit-radial-gradient(white, black); clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); transition: clip-path 0.5s ease; }
         .blog-post-card:hover .slideshow-container { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 85%); }
         .slideshow-item { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 1.2s ease-in-out; pointer-events: none; }
@@ -84,10 +95,7 @@
         <p class="subtitle">NINO KARTSIVADZE</p>
     </header>
     <nav>
-        <a href="index.html" class="nav-link">ENAMEL</a>
-        <a href="cast.html" class="nav-link">CAST</a>
-        <a href="about.html" class="nav-link">ABOUT ME</a>
-        <a href="blog.html" class="nav-link active">BLOG</a>
+        <!-- Навигация будет создана динамически -->
     </nav>
     <div class="container">
         <h1 class="page-title">The Artist's Blog</h1>
@@ -126,6 +134,86 @@
             function getYoutubeEmbedUrl(url) { let videoId; try { const urlObj = new URL(url); videoId = (urlObj.hostname === 'youtu.be') ? urlObj.pathname.slice(1) : urlObj.searchParams.get('v'); } catch(e) { return null; } return videoId ? `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&origin=${window.location.origin}` : null; }
             function createMediaElement(mediaUrl) { if (isYoutubeUrl(mediaUrl)) { const embedUrl = getYoutubeEmbedUrl(mediaUrl); if (embedUrl) { const wrapper = document.createElement('div'); wrapper.className = 'slideshow-item slideshow-item-video'; const iframe = document.createElement('iframe'); iframe.src = embedUrl; wrapper.appendChild(iframe); return wrapper; } } else { const img = document.createElement('img'); img.src = mediaUrl; img.className = 'slideshow-item'; img.alt = 'Blog Post Image'; return img; } return null; }
             function setupSlideshow(container) { const slides = Array.from(container.querySelectorAll('.slideshow-item, .slideshow-item-video')); if (slides.length <= 1) { if (slides.length === 1) slides[0].classList.add('active'); return; } const overlay = document.createElement('div'); overlay.className = 'slideshow-overlay'; container.appendChild(overlay); let currentIndex = 0, intervalId = setInterval(() => showSlide(currentIndex + 1), 4000); function showSlide(index) { const oldSlide = slides[currentIndex]; if (oldSlide) oldSlide.classList.remove('active'); currentIndex = (index + slides.length) % slides.length; const newSlide = slides[currentIndex]; if (newSlide) setTimeout(() => newSlide.classList.add('active'), 1300); } function manualSlide(dir) { clearInterval(intervalId); showSlide(currentIndex + dir); intervalId = setInterval(() => showSlide(currentIndex + 1), 4000); } let touchStartX = 0; overlay.addEventListener('mousedown', e => { touchStartX = e.clientX; clearInterval(intervalId); }); overlay.addEventListener('mouseup', e => { if (e.clientX < touchStartX - 50) manualSlide(1); else if (e.clientX > touchStartX + 50) manualSlide(-1); intervalId = setInterval(() => showSlide(currentIndex + 1), 4000); }); showSlide(0); }
+
+            function renderNavigation() {
+                const nav = document.querySelector('nav');
+                if (!nav) return;
+                nav.innerHTML = '';
+                let delay = 1;
+                
+                // Основная навигация с выпадающими меню
+                const mainLinks = [
+                    { 
+                        href: 'index.html', 
+                        text: 'ENAMEL', 
+                        id: 'nav-enamel',
+                        hasDropdown: true,
+                        dropdownItems: []
+                    },
+                    { 
+                        href: 'cast.html', 
+                        text: 'CAST', 
+                        id: 'nav-cast',
+                        hasDropdown: true,
+                        dropdownItems: []
+                    },
+                    { href: 'about.html', text: 'ABOUT ME', id: 'nav-about' },
+                    { 
+                        href: 'blog.html', 
+                        text: 'BLOG', 
+                        id: 'nav-blog',
+                        hasDropdown: true,
+                        dropdownItems: [
+                            { text: 'ENGLISH', lang: 'en' },
+                            { text: 'GEORGIAN', lang: 'ka' },
+                            { text: 'RUSSIAN', lang: 'ru' }
+                        ]
+                    }
+                ];
+
+                mainLinks.forEach(linkInfo => {
+                    const linkContainer = document.createElement('div');
+                    linkContainer.className = 'nav-link-container';
+                    
+                    const mainLink = document.createElement('a');
+                    mainLink.href = linkInfo.href;
+                    mainLink.id = linkInfo.id;
+                    mainLink.className = `nav-link ${linkInfo.hasDropdown ? 'has-dropdown' : ''}`;
+                    mainLink.style.setProperty('--delay', delay++);
+                    mainLink.textContent = linkInfo.text;
+                    
+                    linkContainer.appendChild(mainLink);
+                    
+                    // Создаем выпадающее меню если нужно
+                    if (linkInfo.hasDropdown && linkInfo.dropdownItems.length > 0) {
+                        const dropdown = document.createElement('div');
+                        dropdown.className = 'sub-nav';
+                        
+                        if (linkInfo.id === 'nav-blog') {
+                            // Для блога - языки
+                            linkInfo.dropdownItems.forEach(item => {
+                                const langLink = document.createElement('a');
+                                langLink.href = `${linkInfo.href}?lang=${item.lang}`;
+                                langLink.className = 'nav-link';
+                                langLink.textContent = item.text;
+                                dropdown.appendChild(langLink);
+                            });
+                        } else {
+                            // Для товаров - подкатегории
+                            const allLink = document.createElement('a');
+                            allLink.href = '#';
+                            allLink.className = 'nav-link';
+                            allLink.textContent = 'SHOW ALL';
+                            allLink.dataset.category = 'all';
+                            dropdown.appendChild(allLink);
+                        }
+                        
+                        linkContainer.appendChild(dropdown);
+                    }
+                    
+                    nav.appendChild(linkContainer);
+                });
+            }
 
             async function loadBlogPosts() {
                 const container = document.getElementById('blog-posts-container');
@@ -190,6 +278,9 @@
                 }
             }
             loadBlogPosts();
+            
+            // Рендерим навигацию
+            renderNavigation();
         });
     </script>
 </body>
