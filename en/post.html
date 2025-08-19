@@ -111,10 +111,10 @@
         header { padding: 4rem 2rem 2rem; display: flex; flex-direction: column; align-items: center; } 
         header .logo { font-size: clamp(1.5rem, 6vw, 3.5rem); letter-spacing: clamp(0.15rem, 2vw, 0.5rem); white-space: nowrap; font-weight: 300; color: var(--primary); } 
         header .subtitle { margin-top: 1rem; font-weight: 300; letter-spacing: 0.3rem; }
-        nav { display: flex; justify-content: center; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; flex-direction: row; } 
+        nav { display: flex; justify-content: center; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; flex-direction: row; background: rgba(212, 175, 55, 0.1); padding: 1rem; border-radius: 8px; } 
         .main-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; width: 100%; } 
         .sub-nav { display: none; width: 100%; margin-top: 1rem; border-top: 1px solid rgba(212, 175, 55, 0.1); padding-top: 1rem; } 
-        .nav-link { margin: 0 1rem; color: var(--text-light); text-decoration: none; position: relative; padding: 0.5rem 0; opacity: 0; animation: fadeIn 1s forwards; animation-delay: calc(var(--delay) * 0.2s); font-size: 0.9rem; cursor: pointer; } 
+        .nav-link { margin: 0 1rem; color: var(--text-light); text-decoration: none; position: relative; padding: 0.5rem 0; font-size: 0.9rem; cursor: pointer; } 
         .nav-link.has-dropdown { position: relative; }
         .nav-link.has-dropdown:hover .sub-nav { display: flex; }
         .nav-link.has-dropdown .sub-nav { position: absolute; top: 100%; left: 0; background: var(--bg-dark); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 1rem; min-width: 200px; z-index: 1000; flex-direction: column; gap: 0.5rem; }
