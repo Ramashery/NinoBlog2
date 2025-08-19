@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Test</title>
+    <style>
+        body { 
+            background: #121212; 
+            color: white; 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+        }
+        
+        nav { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            margin-bottom: 3rem; 
+            flex-wrap: wrap; 
+            gap: 1rem; 
+            flex-direction: row; 
+            background: red; 
+            padding: 2rem; 
+            border-radius: 8px; 
+            border: 5px solid yellow; 
+        }
+        
+        .nav-link { 
+            margin: 0 1rem; 
+            color: white; 
+            text-decoration: none; 
+            position: relative; 
+            padding: 0.5rem 0; 
+            font-size: 0.9rem; 
+            cursor: pointer; 
+        }
+        
+        .nav-link.has-dropdown { 
+            position: relative; 
+        }
+        
+        .sub-nav { 
+            display: none; 
+            position: absolute; 
+            top: 100%; 
+            left: 0; 
+            background: #080808; 
+            border: 1px solid rgba(212, 175, 55, 0.2); 
+            border-radius: 8px; 
+            padding: 1rem; 
+            min-width: 200px; 
+            z-index: 1000; 
+            flex-direction: column; 
+            gap: 0.5rem; 
+        }
+        
+        .nav-link.has-dropdown:hover .sub-nav { 
+            display: flex; 
+        }
+        
+        .nav-link-container { 
+            position: relative; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Navigation Test</h1>
+    
+    <nav>
+        <div class="nav-link-container">
+            <a href="#" class="nav-link has-dropdown">ENAMEL</a>
+            <div class="sub-nav">
+                <a href="#" class="nav-link">SHOW ALL</a>
+            </div>
+        </div>
+        <div class="nav-link-container">
+            <a href="#" class="nav-link has-dropdown">CAST</a>
+            <div class="sub-nav">
+                <a href="#" class="nav-link">SHOW ALL</a>
+            </div>
+        </div>
+        <div class="nav-link-container">
+            <a href="#" class="nav-link">ABOUT ME</a>
+        </div>
+        <div class="nav-link-container">
+            <a href="#" class="nav-link has-dropdown">BLOG</a>
+            <div class="sub-nav">
+                <a href="#" class="nav-link">ENGLISH</a>
+                <a href="#" class="nav-link">GEORGIAN</a>
+                <a href="#" class="nav-link">RUSSIAN</a>
+            </div>
+        </div>
+    </nav>
+    
+    <p>Если вы видите красную навигацию с желтой рамкой, значит CSS работает.</p>
+    <p>Если навигация не видна, значит есть проблема с браузером или файлом.</p>
+</body>
+</html>
