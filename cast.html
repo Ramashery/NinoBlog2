@@ -68,29 +68,6 @@
     </header>
     
     <nav>
-        <div class="nav-link-container">
-            <a href="index.html" class="nav-link has-dropdown">ENAMEL</a>
-            <div class="sub-nav">
-                <a href="#" class="nav-link" data-category="all">SHOW ALL</a>
-            </div>
-        </div>
-        <div class="nav-link-container">
-            <a href="cast.html" class="nav-link has-dropdown">CAST</a>
-            <div class="sub-nav">
-                <a href="#" class="nav-link" data-category="all">SHOW ALL</a>
-            </div>
-        </div>
-        <div class="nav-link-container">
-            <a href="about.html" class="nav-link">ABOUT ME</a>
-        </div>
-        <div class="nav-link-container">
-            <a href="blog.html" class="nav-link has-dropdown">BLOG</a>
-            <div class="sub-nav">
-                <a href="blog.html?lang=en" class="nav-link">ENGLISH</a>
-                <a href="blog.html?lang=ka" class="nav-link">GEORGIAN</a>
-                <a href="blog.html?lang=ru" class="nav-link">RUSSIAN</a>
-            </div>
-        </div>
     </nav>
     <div class="container">
         <h1 id="main-h1">Cast Gold, Silver & Bronze Collection</h1>
@@ -147,7 +124,7 @@
                     renderProducts('all'); 
                     
                     // Обновляем навигацию после загрузки категорий
-                    // renderNavigation();
+                    renderNavigation();
                 } catch (error) {
                     console.error("Error loading data from Firebase:", error);
                 }
@@ -256,6 +233,22 @@
                     
                     nav.appendChild(linkContainer);
                 });
+                
+                // Обработка URL параметров для категорий
+                const urlParams = new URLSearchParams(window.location.search);
+                const categoryParam = urlParams.get('category');
+                if (categoryParam) {
+                    const linkToActivate = document.querySelector(`[data-category="${categoryParam}"]`);
+                    if (linkToActivate) {
+                        document.querySelectorAll('[data-category]').forEach(l => l.classList.remove('active'));
+                        linkToActivate.classList.add('active');
+                        renderProducts(categoryParam);
+                    }
+                } else {
+                    const defaultLink = document.querySelector(`[data-category="all"]`);
+                    if (defaultLink) defaultLink.classList.add('active');
+                    renderProducts('all');
+                }
             }
 
             function createMediaElement(mediaUrl) { if (isYoutubeUrl(mediaUrl)) { const embedUrl = getYoutubeEmbedUrl(mediaUrl); if (embedUrl) { const wrapper = document.createElement('div'); wrapper.className = 'slideshow-item slideshow-item-video'; const iframe = document.createElement('iframe'); iframe.src = embedUrl; wrapper.appendChild(iframe); return wrapper; } } else { const img = document.createElement('img'); img.src = mediaUrl; img.className = 'slideshow-item'; return img; } return null; }
