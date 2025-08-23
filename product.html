@@ -20,6 +20,19 @@
     <meta property="og:url" content="https://minankari.art/index.html" />
     <meta property="og:site_name" content="CLOISONNE ENAMEL | Nino Kartsivadze" />
     
+    <!-- Дополнительные OG-теги для товаров -->
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Handmade cloisonne enamel jewelry" />
+    
+    <!-- Twitter Card теги -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cloisonne Enamel Jewelry" />
+    <meta name="twitter:description" content="Handmade cloisonne enamel jewelry by Nino Kartsivadze from Tbilisi." />
+    <meta name="twitter:image" content="https://minankari.art/placeholder.jpg" />
+    <meta name="twitter:site" content="@ninokartsivadze" />
+    
     <script>
         (function earlySeoBootstrap() {
             try {
@@ -145,14 +158,26 @@
     <div id="particles-js"></div>
     <div id="message-container" class="message-container">Loading masterpiece...</div>
     
+    <!-- Контейнер для предварительного просмотра OG-изображения -->
+    <div id="og-preview" style="position: fixed; top: 20px; right: 20px; background: rgba(18, 18, 18, 0.95); padding: 20px; border-radius: 12px; border: 1px solid #D4AF37; max-width: 300px; z-index: 1000; display: none;"></div>
+    
     <div id="page-content-wrapper"></div>
 
     <script src="https://www.youtube.com/iframe_api" async defer></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="generate-og-images.js"></script>
     <script>
         function isYoutubeUrl(url) { return /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/.test(url); }
+        
+        // Функция для скачивания OG-изображения
+        function downloadOGImage(dataUrl, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = dataUrl;
+            link.click();
+        }
 
         function updateMetaTags(product) {
             const rawUrl = window.location.href;
@@ -166,10 +191,11 @@
             const imageList = product.images ? product.images.filter(url => !isYoutubeUrl(url)) : [];
             const firstImage = imageList.length > 0 ? imageList[0] : 'https://minankari.art/placeholder.jpg';
 
+            // Обновляем основные мета-теги
             document.title = `${seoTitle} | Nino Kartsivadze`;
             document.querySelector('meta[name="description"]').setAttribute('content', metaDescription);
             
-            // ИЗМЕНЕНИЕ 2: Этот блок кода теперь безопасно создает или обновляет канонический тег.
+            // Обновляем канонический тег
             let canonicalLink = document.querySelector('link[rel="canonical"]');
             if (!canonicalLink) {
                 canonicalLink = document.createElement('link');
@@ -178,10 +204,59 @@
             }
             canonicalLink.setAttribute('href', pageUrl);
 
-            document.querySelector('meta[property="og:title"]').setAttribute('content', seoTitle);
-            document.querySelector('meta[property="og:description"]').setAttribute('content', metaDescription);
-            document.querySelector('meta[property="og:url"]').setAttribute('content', pageUrl);
-            document.querySelector('meta[property="og:image"]').setAttribute('content', firstImage);
+            // Генерируем уникальное OG-изображение для товара
+            let ogImageUrl = firstImage;
+            if (window.OGImageGenerator && product.images && product.images.length > 0) {
+                try {
+                    const generator = new window.OGImageGenerator();
+                    ogImageUrl = await generator.generateProductImage(product);
+                    
+                    // Создаем временный элемент для предварительного просмотра
+                    const previewContainer = document.getElementById('og-preview');
+                    if (previewContainer) {
+                        previewContainer.innerHTML = `
+                            <h3>OG Image Preview:</h3>
+                            <img src="${ogImageUrl}" alt="OG Image Preview" style="max-width: 100%; height: auto; border: 1px solid #D4AF37; border-radius: 8px;">
+                            <button onclick="downloadOGImage('${ogImageUrl}', '${product.slug || 'product'}-og-image.png')" style="margin-top: 10px; padding: 8px 16px; background: #D4AF37; color: #121212; border: none; border-radius: 4px; cursor: pointer;">
+                                Download OG Image
+                            </button>
+                        `;
+                    }
+                } catch (error) {
+                    console.warn('Failed to generate OG image:', error);
+                    ogImageUrl = firstImage;
+                }
+            }
+
+            // Обновляем все OG-теги
+            const ogTags = {
+                'og:title': seoTitle,
+                'og:description': metaDescription,
+                'og:url': pageUrl,
+                'og:image': ogImageUrl,
+                'og:image:alt': `${seoTitle} - Handmade cloisonne enamel jewelry by Nino Kartsivadze`
+            };
+
+            Object.entries(ogTags).forEach(([property, content]) => {
+                const meta = document.querySelector(`meta[property="${property}"]`);
+                if (meta) {
+                    meta.setAttribute('content', content);
+                }
+            });
+
+            // Обновляем Twitter Card теги
+            const twitterTags = {
+                'twitter:title': seoTitle,
+                'twitter:description': metaDescription,
+                'twitter:image': firstImage
+            };
+
+            Object.entries(twitterTags).forEach(([name, content]) => {
+                const meta = document.querySelector(`meta[name="${name}"]`);
+                if (meta) {
+                    meta.setAttribute('content', content);
+                }
+            });
 
             const schemaScript = document.getElementById('product-schema-json');
             if (schemaScript) {
@@ -254,6 +329,12 @@
             const productContentEl = document.getElementById('product-content');
             productContentEl.style.display = 'block';
             setTimeout(() => productContentEl.classList.add('loaded'), 50);
+            
+            // Показываем контейнер предварительного просмотра OG-изображения
+            const ogPreview = document.getElementById('og-preview');
+            if (ogPreview) {
+                ogPreview.style.display = 'block';
+            }
 
             setupSlideshow(productContentEl.querySelector('.slideshow-container'));
             if (product.category) {
