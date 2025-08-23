@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Test - NinoBlog2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #121212;
+            color: #FFFFFF;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #D4AF37;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .test-section h2 {
+            color: #D4AF37;
+            margin-bottom: 15px;
+        }
+        
+        .test-button {
+            background: #D4AF37;
+            color: #121212;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        
+        .test-button:hover {
+            background: #9B7C2E;
+            transform: translateY(-2px);
+        }
+        
+        .device-info {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        
+        .responsive-test {
+            background: #D4AF37;
+            color: #121212;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .screen-size {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature-list li:before {
+            content: '✓';
+            color: #D4AF37;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .test-button {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .test-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Mobile Test - NinoBlog2</h1>
+        
+        <div class="test-section">
+            <h2>🔍 Информация об устройстве</h2>
+            <div class="device-info" id="deviceInfo">
+                Загрузка информации...
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📏 Размеры экрана</h2>
+            <div class="screen-size" id="screenSize">
+                Загрузка размеров...
+            </div>
+            <div class="responsive-test" id="responsiveTest">
+                Тест адаптивности
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Тесты для мобильных устройств</h2>
+            <button class="test-button" onclick="testTouch()">👆 Тест касаний</button>
+            <button class="test-button" onclick="testOrientation()">📱 Тест ориентации</button>
+            <button class="test-button" onclick="testPerformance()">⚡ Тест производительности</button>
+            <button class="test-button" onclick="testStorage()">💾 Тест хранилища</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 Тестирование OG-изображений</h2>
+            <button class="test-button" onclick="testOGGenerator()">🎨 Тест генератора OG</button>
+            <button class="test-button" onclick="openProductPage()">🛍️ Открыть страницу товара</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>✅ Что проверять на мобильных:</h2>
+            <ul class="feature-list">
+                <li>Адаптивность дизайна</li>
+                <li>Скорость загрузки</li>
+                <li>Работу касаний и жестов</li>
+                <li>Отображение в разных ориентациях</li>
+                <li>Работу OG-изображений</li>
+                <li>Удобство навигации</li>
+                <li>Читаемость текста</li>
+                <li>Размеры кнопок и ссылок</li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <h2>📱 Рекомендуемые размеры для тестирования:</h2>
+            <div class="device-info">
+                <strong>iPhone:</strong> 375x667, 414x896<br>
+                <strong>Android:</strong> 360x640, 412x915<br>
+                <strong>Tablet:</strong> 768x1024, 1024x1366
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Показываем информацию об устройстве
+        function updateDeviceInfo() {
+            const deviceInfo = document.getElementById('deviceInfo');
+            const screenSize = document.getElementById('screenSize');
+            const responsiveTest = document.getElementById('responsiveTest');
+            
+            // Информация об устройстве
+            deviceInfo.innerHTML = `
+                <strong>User Agent:</strong> ${navigator.userAgent}<br>
+                <strong>Platform:</strong> ${navigator.platform}<br>
+                <strong>Language:</strong> ${navigator.language}<br>
+                <strong>Cookie Enabled:</strong> ${navigator.cookieEnabled}<br>
+                <strong>Online:</strong> ${navigator.onLine}<br>
+                <strong>Connection:</strong> ${navigator.connection ? navigator.connection.effectiveType : 'Unknown'}
+            `;
+            
+            // Размеры экрана
+            screenSize.innerHTML = `
+                <strong>Screen:</strong> ${screen.width}x${screen.height}<br>
+                <strong>Viewport:</strong> ${window.innerWidth}x${window.innerHeight}<br>
+                <strong>Device Pixel Ratio:</strong> ${window.devicePixelRatio}
+            `;
+            
+            // Тест адаптивности
+            responsiveTest.innerHTML = `
+                ${window.innerWidth < 768 ? '📱 Мобильный режим' : '💻 Десктопный режим'}<br>
+                Ширина: ${window.innerWidth}px
+            `;
+        }
+        
+        // Тест касаний
+        function testTouch() {
+            if ('ontouchstart' in window) {
+                alert('✅ Устройство поддерживает касания!\n\nПопробуйте:\n- Свайп влево/вправо\n- Двойное касание\n- Масштабирование');
+            } else {
+                alert('❌ Устройство не поддерживает касания');
+            }
+        }
+        
+        // Тест ориентации
+        function testOrientation() {
+            if (window.orientation !== undefined) {
+                alert(`📱 Ориентация: ${window.orientation === 0 ? 'Портретная' : 'Альбомная'}\n\nПоверните устройство для теста`);
+            } else {
+                alert('❌ Информация об ориентации недоступна');
+            }
+        }
+        
+        // Тест производительности
+        function testPerformance() {
+            if ('performance' in window) {
+                const perf = performance.getEntriesByType('navigation')[0];
+                const loadTime = perf.loadEventEnd - perf.loadEventStart;
+                alert(`⚡ Время загрузки: ${loadTime}ms\n\nДоменная загрузка: ${perf.domainLookupEnd - perf.domainLookupStart}ms\n\nВремя ответа сервера: ${perf.responseEnd - perf.requestStart}ms`);
+            } else {
+                alert('❌ Performance API недоступен');
+            }
+        }
+        
+        // Тест хранилища
+        function testStorage() {
+            let storageInfo = '';
+            
+            if ('localStorage' in window) {
+                storageInfo += '✅ LocalStorage доступен\n';
+            } else {
+                storageInfo += '❌ LocalStorage недоступен\n';
+            }
+            
+            if ('sessionStorage' in window) {
+                storageInfo += '✅ SessionStorage доступен\n';
+            } else {
+                storageInfo += '❌ SessionStorage недоступен\n';
+            }
+            
+            if ('indexedDB' in window) {
+                storageInfo += '✅ IndexedDB доступен\n';
+            } else {
+                storageInfo += '❌ IndexedDB недоступен\n';
+            }
+            
+            alert(storageInfo);
+        }
+        
+        // Тест генератора OG
+        function testOGGenerator() {
+            if (window.OGImageGenerator) {
+                alert('✅ Генератор OG-изображений загружен!\n\nОткройте test-og-generator.html для тестирования');
+            } else {
+                alert('❌ Генератор OG-изображений не загружен\n\nПроверьте файл generate-og-images.js');
+            }
+        }
+        
+        // Открыть страницу товара
+        function openProductPage() {
+            const slug = prompt('Введите slug товара для тестирования:', 'test-product');
+            if (slug) {
+                window.open(`product.html?slug=${slug}`, '_blank');
+            }
+        }
+        
+        // Обновляем информацию при изменении размера окна
+        window.addEventListener('resize', updateDeviceInfo);
+        window.addEventListener('orientationchange', updateDeviceInfo);
+        
+        // Инициализация
+        updateDeviceInfo();
+        
+        // Добавляем обработчики касаний для мобильных устройств
+        if ('ontouchstart' in window) {
+            document.addEventListener('touchstart', function(e) {
+                console.log('Touch detected:', e.touches.length, 'finger(s)');
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                e.preventDefault(); // Предотвращаем скролл при тестировании
+            });
+        }
+    </script>
+</body>
+</html>
